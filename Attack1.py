@@ -44,12 +44,20 @@ def birthday_attack(hash_func, hash_length: int, attempts: int, algorithm: str):
     return False
 
 # 运行生日攻击
-hash_length = 32  # 比较前 6 位的哈希值，简化实验
-attempts = 2**12  # 尝试的次数
+# hash_length = 32  # 比较前 6 位的哈希值，简化实验
+for algo in ['MD5', 'SHA1', 'SHA256']:
+    if algo == 'MD5':
+        hash_length = 32  # 完整的MD5哈希长度
+    elif algo == 'SHA1':
+        hash_length = 40  # 完整的SHA-1哈希长度
+    elif algo == 'SHA256':
+        hash_length = 64  # 完整的SHA-256哈希长度
+attempts = 2**20  # 尝试的次数
 
 for algo in ['MD5', 'SHA1', 'SHA256']:
     print(f"Attempting birthday attack on {algo} (first {hash_length} hex digits)...")
     birthday_attack(hash_message, hash_length, attempts, algo)
+
 
 
 
