@@ -120,4 +120,4 @@ if attack_type == 'birthday':
     birthday_attack(hash_message, hash_length, attempts=attackAttempts, algorithm=hash_algorithm, type=char_type)  # 使用用户输入的参数
 elif attack_type == 'pollard_rho':
     print(f"Attempting Pollard's rho attack on {hash_algorithm}...")
-    pollard_rho(hash_message, algorithm=hash_algorithm, type=char_type)  # 使用用户输入的参数
+    pollard_rho(char_type, hash_message, algorithm=hash_algorithm)  # 使用用户输入的参数
