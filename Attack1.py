@@ -62,24 +62,30 @@ for algo in ['MD5', 'SHA1', 'SHA256']:
 
 
 # Pollard ρ 碰撞查找
-def pollard_rho(hash_func, algorithm: str, max_iterations=2**64):
+def pollard_rho(hash_func, algorithm: str, compare_length: int, max_iterations=2**16):
     def f(x):
-        return hash_func(x, algorithm)  # 使用哈希函数
-    
+      hash_value = hash_func(x, algorithm)
+      return hash_value
+
     x = random_string(8)  # 初始值
-    y = f(x)  # f(x)
-    
+    y = x  
+    print(f"The original input is {x}")
+
     for i in range(max_iterations):
-        # 快速前进2步
-        x = f(x)
-        y = f(f(y))
         
+        x_hash = f(x)
+        y_hash2 = f(f(y))
+
         # 检查是否有碰撞
-        if x == y:
+        if x_hash[:compare_length] == y_hash2[:compare_length]:
             print(f"Collision found for {algorithm} after {i+1} iterations!")
             print(f"Message 1: {x}, Message 2: {y}")
-            print(f"Hash Value: {hash_func(x, algorithm)}")
+            print(f"M1 Hash Value: {x_hash}")
+            print(f"M2 Hash Value: {y_hash2}")
             return True
+        else: 
+          x = x_hash
+          y = y_hash2
 
     print(f"No collision found for {algorithm} after {max_iterations} iterations")
     return False
@@ -87,7 +93,8 @@ def pollard_rho(hash_func, algorithm: str, max_iterations=2**64):
 # 运行 Pollard ρ 方法
 for algo in ['MD5', 'SHA1', 'SHA256']:
     print(f"Attempting Pollard's rho attack on {algo}...")
-    pollard_rho(hash_message, algo)
+    pollard_rho(hash_message, algo, compare_length=2)
+
 
 
 
