@@ -124,7 +124,8 @@ def second_preimage_attack(hash_func, target_hash, char_type, max_length, attemp
         
         # Now, use t_compare_length for slicing
         if hash_value[:t_compare_length] == target_hash_prefix: 
-            print(f"second_Preimage found: {candidate_str} hashes to {target_hash} (first {t_compare_length} chars match)")
+            print(f"second_Preimage found: {candidate_str} hashes to {hash_value} (first {t_compare_length} chars match target hash {target_hash})")
+
             return candidate_str
     
     print("No second_preimage found within the given constraints.")
