@@ -1,6 +1,7 @@
 import hashlib
 import random
 import string
+import itertools
 
 # 从用户输入获取哈希算法
 hash_algorithm_options = ['MD5', 'SHA1', 'SHA256']
