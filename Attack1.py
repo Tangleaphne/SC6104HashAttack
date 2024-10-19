@@ -21,7 +21,7 @@ if char_type not in char_type_options:
     raise ValueError(f"Invalid character type. Please choose from {char_type_options}.")
 
 # 从用户输入获取攻击类型
-attack_type_options = ['birthday', 'pollard_rho', 'preimage']
+attack_type_options = ['birthday', 'pollard_rho', 'second_preimage']
 print(f"Choose attack type from {attack_type_options}:")
 attack_type = input().strip().lower()
 
@@ -113,8 +113,8 @@ def pollard_rho(type: str, hash_func, algorithm: str, max_iterations=2**64):
     return False
 
 
-#preimage attack
-def preimage_attack(hash_func, target_hash, char_type, max_length, attempts: int, algorithm: str, type: str, compare_length=int):
+#second_preimage attack
+def second_preimage_attack(hash_func, target_hash, char_type, max_length, attempts: int, algorithm: str, type: str, compare_length=int):
     # 只取目标哈希的前 compare_length 位
     target_hash_prefix = target_hash[:t_compare_length]
 
@@ -124,10 +124,10 @@ def preimage_attack(hash_func, target_hash, char_type, max_length, attempts: int
         
         # Now, use t_compare_length for slicing
         if hash_value[:t_compare_length] == target_hash_prefix: 
-            print(f"Preimage found: {candidate_str} hashes to {target_hash} (first {t_compare_length} chars match)")
+            print(f"second_Preimage found: {candidate_str} hashes to {target_hash} (first {t_compare_length} chars match)")
             return candidate_str
     
-    print("No preimage found within the given constraints.")
+    print("No second_preimage found within the given constraints.")
     return None
 
 
@@ -139,12 +139,12 @@ if attack_type == 'birthday':
 elif attack_type == 'pollard_rho':
     print(f"Attempting Pollard's rho attack on {hash_algorithm}...")
     pollard_rho(char_type, hash_message, algorithm=hash_algorithm)  # 使用用户输入的参数
-elif attack_type == 'preimage':
+elif attack_type == 'second_preimage':
     max_length = int(input("Enter the maximum length for the random string: ").strip())
     t_compare_length = int(input("Enter the number of hash characters to compare (e.g., 8, 16): ").strip())
     # 随机生成一个目标字符串，并生成其哈希值作为目标哈希
     target_string = random_string(max_length, char_type)
     target_hash = hash_message(target_string, hash_algorithm)
     print(f"Target string: {target_string}, Target hash: {target_hash}")
-    print(f"Attempting preimage attack on {hash_algorithm} with target hash {target_hash}...")
-    preimage_attack(hash_message, target_hash, char_type, max_length, attackAttempts, hash_algorithm, type=char_type)
+    print(f"Attempting second_preimage attack on {hash_algorithm} with target hash {target_hash}...")
+    second_preimage_attack(hash_message, target_hash, char_type, max_length, attackAttempts, hash_algorithm, type=char_type)
