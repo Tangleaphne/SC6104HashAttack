@@ -187,3 +187,5 @@ elif attack_type == 'second_preimage':
     print(f"Target string: {target_string}, Target hash: {target_hash}")
     print(f"Attempting second_preimage attack on {hash_algorithm} with target hash {target_hash}...")
     second_preimage_attack(hash_message, target_hash, char_type, max_length, attackAttempts, hash_algorithm, type=char_type)
+elif attack_type == 'preimage':
+    
