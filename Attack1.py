@@ -22,34 +22,41 @@ def hash_message(message: str, algorithm: str) -> str:
 
 
 
-# 生日攻击函数
 def birthday_attack(hash_func, hash_length: int, attempts: int, algorithm: str):
     hash_dict = {}
-    
+
     for _ in range(attempts):
         # 生成随机消息
         message = random_string(8)
         hashed_value = hash_func(message, algorithm)[:hash_length]  # 只考虑部分哈希值
 
         # 检查是否有碰撞
-        if hashed_value in hash_dict:
+        if hashed_value in hash_dict and hash_dict[hashed_value] != message:
             print(f"Collision found for {algorithm}!")
-            print(f"Message 1: {message}, Message 2: {hash_dict[hashed_value]}")
+            print(f"Message 1: {hash_dict[hashed_value]}, Message 2: {message}")
             print(f"Hash Value: {hashed_value}")
             return True
         else:
             hash_dict[hashed_value] = message
-    
+
     print(f"No collision found for {algorithm} after {attempts} attempts")
     return False
 
 # 运行生日攻击
-hash_length = 32  # 比较前 6 位的哈希值，简化实验
-attempts = 2**12  # 尝试的次数
+for algo in ['MD5', 'SHA1', 'SHA256']:
+    if algo == 'MD5':
+        hash_length = 8  # 完整的MD5哈希长度
+    elif algo == 'SHA1':
+        hash_length = 8  # 完整的SHA-1哈希长度
+    elif algo == 'SHA256':
+        hash_length = 8  # 完整的SHA-256哈希长度
+
+attempts = 2**20  # 尝试的次数
 
 for algo in ['MD5', 'SHA1', 'SHA256']:
-    print(f"Attempting birthday attack on {algo} (first {hash_length} hex digits)...")
+    print(f"Attempting birthday attack on {algo}...")
     birthday_attack(hash_message, hash_length, attempts, algo)
+
 
 
 
