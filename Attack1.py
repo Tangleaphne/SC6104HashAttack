@@ -132,6 +132,29 @@ def second_preimage_attack(hash_func, target_hash, char_type, max_length, attemp
     return None
 
 
+# 暴力枚举破解函数，用于原象攻击
+def brute_force_hash(hash_func, target_hash, max_len):
+    """
+    对给定的哈希值进行暴力破解以寻找原象
+    :param hash_func: 哈希函数
+    :param target_hash: 目标哈希值
+    :param max_len: 最大尝试长度
+    :return: 找到的原象
+    """
+    # 简单的字符集组合，暴力破解时，将使用这些小写字母和数字组合来生成可能的原象
+    charset = string.ascii_lowercase + string.digits
+    # 尝试不同长度的组合
+    for length in range(1, max_len + 1):
+        # 使用itertools生成所有可能的字符组合
+        for guess in itertools.product(charset, repeat=length):
+            # 将字符组合转换为字符串
+            guess_str = ''.join(guess)
+            # 计算猜测字符串的哈希值
+            guess_hash = hash_func(guess_str.encode()).hexdigest()
+            # 如果哈希值匹配，则返回原象
+            if guess_hash == target_hash:
+                return guess_str
+    return None
 
 # 根据用户选择的攻击类型执行相应的攻击
 if attack_type == 'birthday':
@@ -149,3 +172,21 @@ elif attack_type == 'second_preimage':
     print(f"Target string: {target_string}, Target hash: {target_hash}")
     print(f"Attempting second_preimage attack on {hash_algorithm} with target hash {target_hash}...")
     second_preimage_attack(hash_message, target_hash, char_type, max_length, attackAttempts, hash_algorithm, type=char_type)
+elif attack_type == 'preimage':
+    print(f"Attempting preimage attack on {hash_algorithm}...")
+    max_len = int(input("Enter the maximum length for the random string: ").strip())
+    # 随机生成一个目标字符串，使用哈希函数定义要破解的哈希值
+    target_string = random_string(max_len, char_type)
+    target_hash = hash_message(target_string, hash_algorithm)
+    # 调用暴力枚举破解函数，根据哈希值生成算法使用不同的哈希算法暴力破解原象
+    if hash_algorithm == 'MD5':
+        result = brute_force_hash(hashlib.md5, target_hash, max_len)
+    elif hash_algorithm == 'SHA1':
+        result = brute_force_hash(hashlib.sha1, target_hash, max_len)
+    elif hash_algorithm == 'SHA256':
+        result = brute_force_hash(hashlib.sha256, target_hash, max_len)
+    #打印结果
+    if result:
+        print(f"find the preimage: {result}")
+    else:
+        print("I haven't found the preimage!")
